@@ -1,8 +1,10 @@
 from __future__ import annotations
-
 from typing import List
-from unit import Unit
+from os.path import join as pjoin
 
+import yaml
+
+from loa.unit import Unit
 from loa import utils
 
 
@@ -73,18 +75,90 @@ class Team:
         
 class TeamExaminer:
     
-    def __init__(self):
-        pass
+    def __init__(self, fname_constraint=None):
+        
+        
+        if not fname_constraint:
+            fname_constraint = "constraint_round-001.yml"            
+
+        self._constraint = self._load_constraint(fname_constraint)
+        
+    def _load_constraint(self, fname: str):
+        dpath_constraint = pjoin(utils.get_package_path(), "constraints")
+        fpath_constraint = pjoin(dpath_constraint, fname)
+        
+                
+        with open(fpath_constraint, "rt") as fin:
+            return yaml.safe_load(fin.read())        
     
     def check(self, team: Team):
-        utils.check_type("team", team, Team)
+        self._check_types(team)
+        self._check_constraints(team)
         
+    
+    def _check_types(self, team: Team):
+        utils.check_type("team", team, Team)        
         for unit in team:
-            if isinstance(unit, Unit):
+            if not isinstance(unit, Unit):
                 err_msg = "An element of Team should be Unit type, "\
                           "not %s"%(type(unit))
                 raise TypeError(err_msg)
-    
-    
-
+        
+    def _check_constraints(self, team: Team):
+        constraint = self._constraint
+        
+        CONS_TEAM = constraint['TEAM']
+        CONS_NUM_UNITS = CONS_TEAM['NUM_UNITS']
+        CONS_MAX_EVS = CONS_TEAM['MAX_EVS']
+        # CONS_SUM_HP = CONS_TEAM['SUM_HP']
+        CONS_SUM_HP_ATT_ARM = CONS_TEAM['SUM_HP_ATT_ARM']
+        CONS_SUM_EVS_DIV_ARM = CONS_TEAM['SUM_EVS_DIV_ARM']
+        
+        
+        if len(team) != CONS_NUM_UNITS:
+            err_msg = "The number of units in a team should be" \
+                      " %d, not %d"%(CONS_NUM_UNITS, len(team))
+            raise ValueError(err_msg)
+        
+        sum_hp = 0
+        sum_att = 0
+        sum_arm = 0
+        sum_evs_div_arm = 0
+        for unit in team:
+            if unit.evs > CONS_MAX_EVS:
+                err_msg = "[%s] The evs of each unit should be " \
+                          "less than or equal to %d, not %d!"
+                raise ValueError(err_msg%(unit.name,
+                                          CONS_MAX_EVS,
+                                          unit.evs))
+            
+            sum_hp += unit.hp
+            sum_att += unit.att
+            sum_arm += unit.arm
+            sum_evs_div_arm += (float(unit.evs) / float(unit.arm))
+        # end of for
+        
+        # if sum_hp > CONS_SUM_HP:
+        #     err_msg = "The summation of HP of all units in a team should be " \
+        #               "less than or equal to %d, not %d!"%(CONS_SUM_HP, sum_hp)
+        #     raise ValueError(err_msg)
+        
+        sum_hp_att_arm = sum_hp + sum_att + sum_arm
+        if sum_hp_att_arm  > CONS_SUM_HP_ATT_ARM:
+            err_msg = "[%s] The summation of HP, ATT, and ARM of all units in a team " \
+                      "should be less than or equal to %d, not %d!"
+            raise ValueError(err_msg%(team.name,
+                                      CONS_SUM_HP_ATT_ARM,
+                                      sum_hp_att_arm))
+            
+        if sum_evs_div_arm  > CONS_SUM_EVS_DIV_ARM:
+            err_msg = "[%s] The summation of EVS/ARM of all units " \
+                      "in a team should be less than or equal to %d, not %d!"
+            raise ValueError(err_msg%(team.name,
+                                      CONS_SUM_EVS_DIV_ARM,
+                                      sum_evs_div_arm))
+        
+        
+            
+        
         

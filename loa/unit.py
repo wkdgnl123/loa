@@ -10,41 +10,62 @@ class Unit:
                  pos: int = 0,
                  hp: int = 0,
                  att: int = 0,
-                 arm: int = 0):
-        # Name
-        self.name = name
+                 arm: int = 0,
+                 evs: int = 0):
         
-        # Position
-        self.pos = pos
+        self.name = name  # Name        
         
-        # HP
-        self.hp = hp  # Hit Points
-                
-        # Attack & Armor
-        self.att = att  # Attack damage
+        self.pos = pos  # Position
+        
+        self.hp = hp  # Hit Points (HP)
+        self.att = att  # Attack Damage
         self.arm = arm  # Armor
+        self.evs = evs  # Evasion
         
     def __str__(self):
-        fstr = "%s(NAME:%s,POS:%s,HP:%s,ATT:%s,ARM:%s)"
+        fstr = "%s(NAME:%s,POS:%s,HP:%s,ATT:%s,ARM:%s,EVS:%s)"
         return fstr%(self.__class__.__name__,
                      self.name,
                      self.pos,
                      self.hp,
                      self.att,
-                     self.arm)
+                     self.arm,
+                     self.evs)
     
     
     def __repr__(self):
         return str(self)
     
     def __eq__(self, other):
-        attr1 = (self.name, self.pos, self.hp, self.att, self.arm)
-        attr2 = (other.name, other.pos, other.hp, other.att, other.arm)
+        attr1 = (self.name,
+                 self.pos,
+                 self.hp,
+                 self.att,
+                 self.arm,
+                 self.evs)
+        attr2 = (other.name,
+                 other.pos,
+                 other.hp,
+                 other.att,
+                 other.arm,
+                 other.evs)
+        
         return attr1 == attr2
         
     def __ne__(self, other):
-        attr1 = (self.name, self.pos, self.hp, self.att, self.arm)
-        attr2 = (other.name, other.pos, other.hp, other.att, other.arm)
+        attr1 = (self.name,
+                 self.pos,
+                 self.hp,
+                 self.att,
+                 self.arm,
+                 self.evs)
+        attr2 = (other.name,
+                 other.pos,
+                 other.hp,
+                 other.att,
+                 other.arm,
+                 other.evs)
+        
         return attr1 != attr2
     
     def __hash__(self):
@@ -97,13 +118,22 @@ class Unit:
         self._arm = val   
 
     @property
+    def evs(self):
+        return self._evs
+    
+    @evs.setter
+    def evs(self, val: int):
+        utils.check_nonnegative_int("evs", val)
+        self._evs = val
+
+    @property
     def magics(self):
         return self._magics
     
     # Methods
     def attack(self, target: Unit):        
-        utils.check_type("target", target, Unit)        
-        
+        utils.check_type("target", target, Unit)
+                
         target.hp = max(0, target.hp - max(1, self.att - target.arm))
         self.hp = max(0, self.hp - max(1, 0.5*target.att - self.arm))
         
@@ -115,3 +145,4 @@ class Unit:
         self.hp = obj.hp
         self.att = obj.att
         self.arm = obj.arm
+        self.evs = obj.evs

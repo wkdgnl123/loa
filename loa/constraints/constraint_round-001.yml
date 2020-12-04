@@ -1,0 +1,7 @@
+
+TEAM:
+  NUM_UNITS: 10    
+  SUM_HP_ATT_ARM: 200
+  MAX_EVS: 10
+  SUM_EVS_DIV_ARM: 20
+    
