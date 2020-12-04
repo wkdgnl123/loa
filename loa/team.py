@@ -93,6 +93,7 @@ class TeamExaminer:
     
     def check(self, team: Team):
         self._check_types(team)
+        self._check_positions(team)
         self._check_constraints(team)
         
     
@@ -103,6 +104,13 @@ class TeamExaminer:
                 err_msg = "An element of Team should be Unit type, "\
                           "not %s"%(type(unit))
                 raise TypeError(err_msg)
+                
+    def _check_positions(self, team: Team):
+        for i, unit in enumerate(team):
+            if unit.pos != i:
+                err_msg = "[%s] The position of the unit " \
+                          "is different from the real position %d (not %d)."
+                raise ValueError(err_msg%(unit.pos, i))
         
     def _check_constraints(self, team: Team):
         constraint = self._constraint
