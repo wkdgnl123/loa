@@ -26,6 +26,8 @@ class Team:
         self._units = units
         self.initialize()
         
+        
+        
     def __str__(self):
         str_units = "\n".join([str(elem) for elem in self._units])
         fstr = "[%s(%s)]\n%s"
@@ -45,10 +47,15 @@ class Team:
     
     def __setitem__(self, i, obj):
         self._units[i] = obj
-    
+        
     @property
     def name(self):
         return self._name
+    
+    @name.setter
+    def name(self, val):
+        utils.check_type("name", val, str)
+        self._name = val
         
     @property
     def units(self) -> List[Unit]:
