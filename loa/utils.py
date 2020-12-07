@@ -1,5 +1,5 @@
 import os
-
+from loa.logging import write_log
 
 def get_package_path():                
     return os.path.abspath(os.path.dirname(__file__))
@@ -7,10 +7,14 @@ def get_package_path():
 
 def check_nonnegative_int(varname, val):
     if not isinstance(val, int):
-        raise ValueError("%s should be int type."%(varname))
+        err_msg = "%s should be int type."%(varname)
+        write_log(err_msg)
+        raise ValueError(err_msg)
         
     if val < 0:
-        raise ValueError("%s cannot be negative."%(varname))
+        err_msg = "%s cannot be negative."%(varname)
+        write_log(err_msg)
+        raise ValueError(err_msg)
 
 def check_type(varname, obj, wtype):
     """Check object for a wanted type.
@@ -35,6 +39,7 @@ def check_type(varname, obj, wtype):
     """
     if not isinstance(obj, wtype):
         err_msg = "%s should be %s type, not %s"%(varname, wtype, type(obj))
+        write_log(err_msg)
         raise TypeError(err_msg)
         
         

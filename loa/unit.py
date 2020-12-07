@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import Dict
-import copy
 
+from loa.logging import write_log
 from loa import utils
 
 class Unit:    
     def __init__(self,
+                 team = None,
                  name: str = "",
                  pos: int = 0,
                  hp: int = 0,
@@ -13,14 +13,15 @@ class Unit:
                  arm: int = 0,
                  evs: int = 0):
         
-        self.name = name  # Name        
+        self.team = team  # Team that this unit belongs to.
+        self.name = name  # Name of this unit.
         
-        self.pos = pos  # Position
+        self.pos = pos    # Position (index) in the team.
         
-        self.hp = hp  # Hit Points (HP)
-        self.att = att  # Attack Damage
-        self.arm = arm  # Armor
-        self.evs = evs  # Evasion
+        self.hp = hp      # Hit Points (HP)
+        self.att = att    # Attack Damage (ATT)
+        self.arm = arm    # Armor (ARM)
+        self.evs = evs    # Evasion (EVS)
         
     def __str__(self):
         fstr = "%s(NAME:%s,POS:%s,HP:%s,ATT:%s,ARM:%s,EVS:%s)"
@@ -31,8 +32,7 @@ class Unit:
                      self.att,
                      self.arm,
                      self.evs)
-    
-    
+
     def __repr__(self):
         return str(self)
     
@@ -72,6 +72,16 @@ class Unit:
         return hash(str(self))
     
     # Properties
+    @property
+    def team(self):
+        return self._team
+    
+    @team.setter
+    def team(self, team):
+        from loa import Team
+        utils.check_type("team", team, Team)            
+        self._team = team
+    
     @property
     def name(self):
         return self._name
@@ -133,11 +143,36 @@ class Unit:
     # Methods
     def attack(self, target: Unit):        
         utils.check_type("target", target, Unit)
-                
+        write_log(
+            "Before attack, %s.%s.HP=%d, %s.%s.HP=%d"%
+            (
+                self.team.name,
+                self.name,
+                self.hp,
+                target.team.name,
+                target.name,
+                target.hp
+            )
+        )
+        
         target.hp = max(0, target.hp - max(1, self.att - target.arm))
         self.hp = max(0, self.hp - max(1, 0.5*target.att - self.arm))
-        
-        print(self.name, "attacks", target.name)
+
+        write_log("%s.%s attacks %s.%s"%(self.team.name,
+                                         self.name,
+                                         target.team.name,
+                                         target.name))
+        write_log(
+            "After attack, %s.%s.HP=%d, %s.%s.HP=%d"%
+            (
+                self.team.name,
+                self.name,
+                self.hp,
+                target.team.name,
+                target.name,
+                target.hp
+            )
+        )
          
     def update(self, obj: Unit):
         utils.check_type("obj", obj, Unit)        
