@@ -76,8 +76,8 @@ if __name__ == "__main__":
     team2 = MyTeam2("Team#2")
     
     examiner = TeamExaminer()
-    examiner.check(team1)
-    examiner.check(team2)
+    examiner.check(team1, "ROUND-01")
+    examiner.check(team2, "ROUND-01")
     
     
     print(team1)
