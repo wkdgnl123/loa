@@ -26,6 +26,8 @@ class Team:
         self._units = units
         self.initialize()
         
+        
+        
     def __str__(self):
         str_units = "\n".join([str(elem) for elem in self._units])
         fstr = "[%s(%s)]\n%s"
@@ -45,10 +47,15 @@ class Team:
     
     def __setitem__(self, i, obj):
         self._units[i] = obj
-    
+        
     @property
     def name(self):
         return self._name
+    
+    @name.setter
+    def name(self, val):
+        utils.check_type("name", val, str)
+        self._name = val
         
     @property
     def units(self) -> List[Unit]:
@@ -92,6 +99,7 @@ class TeamExaminer:
     
     def check(self, team: Team, league_round: str = None):
         self._check_types(team)
+        self._check_positions(team)
         self._check_constraints(team, league_round)
         
     
@@ -102,6 +110,13 @@ class TeamExaminer:
                 err_msg = "An element of Team should be Unit type, "\
                           "not %s"%(type(unit))
                 raise TypeError(err_msg)
+                
+    def _check_positions(self, team: Team):
+        for i, unit in enumerate(team):
+            if unit.pos != i:
+                err_msg = "[%s] The position of the unit " \
+                          "is different from the real position %d (not %d)."
+                raise ValueError(err_msg%(unit.pos, i))
         
     def _check_constraints(self, team: Team, league_round=None):
         constraints = self._constraints
