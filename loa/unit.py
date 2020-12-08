@@ -8,10 +8,10 @@ class Unit:
                  team = None,
                  name: str = "",
                  pos: int = 0,
-                 hp: int = 0,
-                 att: int = 0,
-                 arm: int = 0,
-                 evs: int = 0):
+                 hp: float = 0,
+                 att: float = 0,
+                 arm: float = 0,
+                 evs: float = 0):
         
         self.team = team  # Team that this unit belongs to.
         self.name = name  # Name of this unit.
@@ -24,7 +24,7 @@ class Unit:
         self.evs = evs    # Evasion (EVS)
         
     def __str__(self):
-        fstr = "%s(NAME:%s,POS:%s,HP:%s,ATT:%s,ARM:%s,EVS:%s)"
+        fstr = "%s(NAME:%s,POS:%.2f,HP:%.2f,ATT:%.2f,ARM:%.2f,EVS:%.2f)"
         return fstr%(self.__class__.__name__,
                      self.name,
                      self.pos,
@@ -96,7 +96,7 @@ class Unit:
         return self._pos
         
     @pos.setter
-    def pos(self, val):
+    def pos(self, val: int):
         utils.check_nonnegative_int("pos", val)
         self._pos = val        
     
@@ -105,8 +105,8 @@ class Unit:
         return self._hp
         
     @hp.setter
-    def hp(self, val: int):
-        utils.check_nonnegative_int("hp", val)
+    def hp(self, val: float):
+        utils.check_nonnegative_float("hp", val)
         self._hp = val
     
     @property
@@ -114,8 +114,8 @@ class Unit:
         return self._att
     
     @att.setter
-    def att(self, val: int):
-        utils.check_nonnegative_int("att", val)
+    def att(self, val: float):
+        utils.check_nonnegative_float("att", val)
         self._att = val
 
     @property
@@ -123,8 +123,8 @@ class Unit:
         return self._arm
     
     @arm.setter
-    def arm(self, val: int):
-        utils.check_nonnegative_int("arm", val)
+    def arm(self, val: float):
+        utils.check_nonnegative_float("arm", val)
         self._arm = val   
 
     @property
@@ -132,8 +132,8 @@ class Unit:
         return self._evs
     
     @evs.setter
-    def evs(self, val: int):
-        utils.check_nonnegative_int("evs", val)
+    def evs(self, val: float):
+        utils.check_nonnegative_float("evs", val)
         self._evs = val
 
     @property
@@ -144,7 +144,7 @@ class Unit:
     def attack(self, target: Unit):        
         utils.check_type("target", target, Unit)
         write_log(
-            "Before attack, %s.%s.HP=%d, %s.%s.HP=%d"%
+            "Before attack, %s.%s.HP=%.2f, %s.%s.HP=%.2f"%
             (
                 self.team.name,
                 self.name,
@@ -163,7 +163,7 @@ class Unit:
                                          target.team.name,
                                          target.name))
         write_log(
-            "After attack, %s.%s.HP=%d, %s.%s.HP=%d"%
+            "After attack, %s.%s.HP=%.2f, %s.%s.HP=%.2f"%
             (
                 self.team.name,
                 self.name,

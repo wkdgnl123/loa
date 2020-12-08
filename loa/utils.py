@@ -16,6 +16,17 @@ def check_nonnegative_int(varname, val):
         write_log(err_msg)
         raise ValueError(err_msg)
 
+def check_nonnegative_float(varname, val):
+    if not isinstance(val, float) and not isinstance(val, int):
+        err_msg = "%s should be float type."%(varname)
+        write_log(err_msg)
+        raise ValueError(err_msg)
+        
+    if val < 0.:
+        err_msg = "%s cannot be negative."%(varname)
+        write_log(err_msg)
+        raise ValueError(err_msg)
+
 def check_type(varname, obj, wtype):
     """Check object for a wanted type.
 
