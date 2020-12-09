@@ -46,7 +46,9 @@ class Simulator:
                 
                 # Arrange
                 offense.arrange(defense_cpy)
-                self._verify_consistency(offense, offense_cpy, "arragement")
+                utils.verify_team_consistency(offense,
+                                              offense_cpy,
+                                              "arragement")
                 
                 # Attack
                 self._apply_attack(offense, defense)
@@ -111,18 +113,5 @@ class Simulator:
                 team[i] = None
                 write_log("%s.%s has been dead..."%(unit.team.name, unit.name))
             
-    def _verify_consistency(self, obj1, obj2, situation):
-        if len(obj1) != len(obj2):
-            err_msg = "Team size has been changed during %s!"%(situation)
-            write_log(err_msg)
-            raise RuntimeError(err_msg)
-            
-        set1_units = set([unit for unit in obj1])
-        set2_units = set([unit for unit in obj2])
 
-        if set1_units != set2_units:
-            err_msg = "The units in the team %s " \
-                      "has been changed during %s!"%(obj1.name, situation)
-            write_log(err_msg)
-            raise RuntimeError(err_msg)
     

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List
 from os.path import join as pjoin
+import copy
 
 import yaml
 
@@ -101,6 +102,7 @@ class TeamExaminer:
         self._check_types(team)
         self._check_positions(team)
         self._check_constraints(team, league_round)
+        self._check_arrange(team)
         
     
     def _check_types(self, team: Team):
@@ -203,4 +205,10 @@ class TeamExaminer:
             raise ValueError(err_msg)
                 
             
-            
+    def _check_arrange(self, team: Team):            
+        team_cpy = copy.deepcopy(team)
+        team.arrange(team)
+        utils.verify_team_consistency(team,
+                                      team_cpy,
+                                      "arrangement")
+        
