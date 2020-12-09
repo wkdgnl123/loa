@@ -120,7 +120,7 @@ class TeamExaminer:
             if unit and unit.pos != i:
                 err_msg = "[%s] The position of the unit " \
                           "is different from the real position %d, not %d."
-                raise ValueError(err_msg%(team.name, unit.pos, i, unit.pos))
+                raise ValueError(err_msg%(team.name, i, unit.pos))
         
     def _check_unit_uniqueness(self, team: Team):
                 
