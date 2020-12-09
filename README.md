@@ -4,8 +4,10 @@
 ## 설치
 
 - 아래 명령어를 순서대로 입력하여 설치할 수 있습니다.
+- `pyyaml`은 Python 표준 라이브러리에 포함되지 않은 외부 라이브러리이기 때문에 설치를 해주시기 바랍니다.
 
 ```bash
+conda install pyyaml
 git clone https://github.com/daew0n/loa.git loa
 cd loa
 python setup.py develop
