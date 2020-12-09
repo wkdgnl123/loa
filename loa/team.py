@@ -103,8 +103,10 @@ class TeamExaminer:
         self._check_positions(team)
         self._check_constraints(team, league_round)
         self._check_arrange(team)
-        
     
+    def check_play(self, team: Team, league_round: str = None):
+        self._check_positions(team)
+        
     def _check_types(self, team: Team):
         utils.check_type("team", team, Team)        
         for unit in team:
@@ -115,7 +117,7 @@ class TeamExaminer:
                 
     def _check_positions(self, team: Team):
         for i, unit in enumerate(team):
-            if unit.pos != i:
+            if unit and unit.pos != i:
                 err_msg = "[%s] The position of the unit " \
                           "is different from the real position %d (not %d)."
                 raise ValueError(err_msg%(unit.pos, i))
@@ -208,7 +210,7 @@ class TeamExaminer:
     def _check_arrange(self, team: Team):            
         team_cpy = copy.deepcopy(team)
         team.arrange(team)
-        utils.verify_team_consistency(team,
-                                      team_cpy,
-                                      "arrangement")
+        utils.check_team_consistency(team,
+                                     team_cpy,
+                                     "arrangement")
         

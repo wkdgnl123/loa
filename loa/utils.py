@@ -1,6 +1,9 @@
 import os
 from loa.logging import write_log
 
+def get_current_round():
+    return "ROUND-01"
+
 def get_package_path():                
     return os.path.abspath(os.path.dirname(__file__))
 
@@ -62,7 +65,7 @@ def attack(unit, target, wtype):
     unit.hp = max(0, unit.hp - max(1, 0.5*target.att - unit.arm))
     
     
-def verify_team_consistency(obj1, obj2, situation):
+def check_team_consistency(obj1, obj2, situation):
     if len(obj1) != len(obj2):
         err_msg = "Team size has been changed during %s!"%(situation)
         write_log(err_msg)

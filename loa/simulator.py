@@ -6,10 +6,13 @@ from loa.unit import Unit
 from loa.team import Team
 from loa.logging import write_log
 
+from loa.team import TeamExaminer
+
 class Simulator:    
 
     def __init__(self):
-        pass
+        self._league_round = utils.get_current_round()
+        self._examiner = TeamExaminer()
              
     def play(self,
              team1: Team,
@@ -41,14 +44,18 @@ class Simulator:
                                                               team2.name,
                                                               i+1,
                                                               t+1))
+                
+                self._examiner.check_play(offense, self._league_round)
+                self._examiner.check_play(defense, self._league_round)
+
                 offense_cpy = copy.deepcopy(offense)
                 defense_cpy = copy.deepcopy(defense)                
                 
                 # Arrange
                 offense.arrange(defense_cpy)
-                utils.verify_team_consistency(offense,
-                                              offense_cpy,
-                                              "arragement")
+                utils.check_team_consistency(offense,
+                                             offense_cpy,
+                                             "arragement")
                 
                 # Attack
                 self._apply_attack(offense, defense)
@@ -75,7 +82,7 @@ class Simulator:
         return num_wins_team1, num_wins_team2, num_draws
 
     
-    def _check_evasion(self, target):
+    def _try_evasion(self, target):
         evsr = target.evs / 100.  # Evasion Rate (EVSR)
         rn = random.uniform(0, 1)
         if rn  <= evsr:
@@ -88,7 +95,7 @@ class Simulator:
         for i, unit in enumerate(offense):            
             target = defense[i]
             if unit and target:
-                if self._check_evasion(target):
+                if self._try_evasion(target):
                     continue
                 
                 unit_cpy = copy.deepcopy(unit)
