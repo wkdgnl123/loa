@@ -5,10 +5,18 @@ import copy
 
 import yaml
 
+try:
+    from wrapt_timeout_decorator import timeout
+except ModuleNotFoundError:
+    def timeout(func):
+        return func
+
 from loa import utils
 from loa.unit import Unit
 from loa.logging import write_log
 from loa.exception import TeamConsistencyError
+
+
 
 class Team:
     def __init__(self,
@@ -241,7 +249,13 @@ class TeamExaminer:
         
         offense_cpy = copy.deepcopy(offense)
         defense_cpy = copy.deepcopy(defense)
-        offense_cpy.arrange(defense_cpy)
+        
+        @timeout(0.01)
+        def _arrange_with_timeout():
+            offense_cpy.arrange(defense_cpy)
+            
+        _arrange_with_timeout()
+        
         self._check_consistency(offense,
                                 offense_cpy,
                                 "arrangement")

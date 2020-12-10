@@ -8,6 +8,7 @@ from loa.logging import write_log
 
 from loa.team import TeamExaminer
 
+
 class Simulator:    
 
     def __init__(self):
