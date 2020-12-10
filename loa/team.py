@@ -181,7 +181,7 @@ class TeamExaminer:
             for unit in team:
                 if unit.evs > CONS_MAX_EVS:
                     err_msg = "[%s] The evs of each unit should be " \
-                              "less than or equal to %d, not %d!"% \
+                              "less than or equal to %.2f, not %.2f!"% \
                               (
                                   unit.name,
                                   CONS_MAX_EVS,
@@ -200,7 +200,7 @@ class TeamExaminer:
             if sum_hp_att_arm  > CONS_SUM_HP_ATT_ARM:
                 err_msg = "[%s] The summation of HP, ATT, and ARM " \
                           "of all units in a team should be less than " \
-                          "or equal to %d, not %d!"% \
+                          "or equal to %.2f, not %.2f!"% \
                           (
                               team.name,
                               CONS_SUM_HP_ATT_ARM,
@@ -212,7 +212,7 @@ class TeamExaminer:
             if sum_evs_div_arm  > CONS_SUM_EVS_DIV_ARM:
                 err_msg = "[%s] The summation of EVS/ARM of all units " \
                           "in a team should be less than or " \
-                          "equal to %d, not %d!"% \
+                          "equal to %.2f, not %.2f!"% \
                           (
                               team.name,
                               CONS_SUM_EVS_DIV_ARM,
