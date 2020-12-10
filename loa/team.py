@@ -205,7 +205,7 @@ class TeamExaminer:
             # end of for
 
             sum_hp_att_arm = sum_hp + sum_att + sum_arm
-            if sum_hp_att_arm  > CONS_SUM_HP_ATT_ARM:
+            if round(sum_hp_att_arm, 4)  > CONS_SUM_HP_ATT_ARM:
                 err_msg = "[%s] The summation of HP, ATT, and ARM " \
                           "of all units in a team should be less than " \
                           "or equal to %.2f, not %.2f!"% \
@@ -217,7 +217,7 @@ class TeamExaminer:
                 write_log(err_msg)
                 raise ValueError(err_msg)
                 
-            if sum_evs_div_arm  > CONS_SUM_EVS_DIV_ARM:
+            if round(sum_evs_div_arm, 4)  > CONS_SUM_EVS_DIV_ARM:
                 err_msg = "[%s] The summation of EVS/ARM of all units " \
                           "in a team should be less than or " \
                           "equal to %.2f, not %.2f!"% \
