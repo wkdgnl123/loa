@@ -10,6 +10,7 @@ from loa import utils
 from loa.unit import Unit
 from loa.logging import write_log
 from loa.exception import TeamConsistencyError
+from loa.exception import ArrangeTimeoutError
 
 
 class Team:
@@ -270,7 +271,7 @@ class TeamExaminer:
                           t_elapsed
                       )
             write_log(err_msg)
-            raise RuntimeError(err_msg)
+            raise ArrangeTimeoutError(offense, err_msg)
         
         self._check_consistency(offense,
                                 offense_cpy,
