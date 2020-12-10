@@ -135,6 +135,9 @@ class TeamExaminer:
     def _check_types(self, team: Team):
         utils.check_type("team", team, Team)        
         for unit in team:
+            if unit is None:
+                continue
+
             if not isinstance(unit, Unit):
                 err_msg = "An element of Team should be Unit type, "\
                           "not %s"%(type(unit))
