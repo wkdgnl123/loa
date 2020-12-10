@@ -8,7 +8,7 @@ import yaml
 from loa import utils
 from loa.unit import Unit
 from loa.logging import write_log
-
+from loa.exception import TeamConsistencyError
 
 class Team:
     def __init__(self,
@@ -240,22 +240,22 @@ class TeamExaminer:
     
     
     def _check_consistency(self,
-                           obj1: Team,
-                           obj2: Team,
+                           origin: Team,
+                           copied: Team,
                            situation: str):
           
-        if len(obj1) != len(obj2):
+        if len(origin) != len(copied):
             err_msg = "The size of the team %s " \
-                      "has been changed in %s!"%(obj1.name, situation)
+                      "has been changed in %s!"%(origin.name, situation)
             write_log(err_msg)
-            raise RuntimeError(err_msg)
+            raise TeamConsistencyError(origin, err_msg)
             
     
-        if obj1 != obj2:
+        if origin != copied:
             err_msg = "The units in the team %s " \
-                      "has been changed in %s!"%(obj1.name, situation)
+                      "has been changed in %s!"%(origin.name, situation)
             write_log(err_msg)
-            raise RuntimeError(err_msg) 
+            raise TeamConsistencyError(origin, err_msg) 
                 
         
     
