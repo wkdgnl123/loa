@@ -123,8 +123,13 @@ class TeamExaminer:
                    offense: Team,
                    defense: Team,
                    league_round: str = None):
+
+        self._check_types(offense)
+        self._check_types(defense)
+
         self._check_positions(offense)        
         self._check_positions(defense)
+
         self._check_arrange(offense, defense)
         
     def _check_types(self, team: Team):
