@@ -2,20 +2,14 @@ from __future__ import annotations
 from typing import List
 from os.path import join as pjoin
 import copy
+import time
 
 import yaml
-
-try:
-    from wrapt_timeout_decorator import timeout
-except ModuleNotFoundError:
-    def timeout(func):
-        return func
 
 from loa import utils
 from loa.unit import Unit
 from loa.logging import write_log
 from loa.exception import TeamConsistencyError
-
 
 
 class Team:
@@ -173,7 +167,7 @@ class TeamExaminer:
         constraints = self._constraints
         
         if not league_round:
-            league_round = "round-01"
+            league_round = "ROUND-01"
             
         league_round = league_round.upper()
         if league_round == "ROUND-01":
@@ -242,6 +236,17 @@ class TeamExaminer:
             write_log(err_msg)
             raise ValueError(err_msg)
                 
+    def _get_time_limit(self, league_round=None):
+        if not league_round:
+            league_round = "ROUND-01"
+            
+        league_round = league_round.upper()
+        if league_round == "ROUND-01":
+            CONS_TEAM = self._constraints[league_round]['TEAM']
+            if 'ARRANGE_TIME_LIMIT' in CONS_TEAM:
+                return CONS_TEAM['ARRANGE_TIME_LIMIT']
+        # end of if
+        return 10000
             
     def _check_arrange(self,
                        offense: Team,
@@ -250,11 +255,22 @@ class TeamExaminer:
         offense_cpy = copy.deepcopy(offense)
         defense_cpy = copy.deepcopy(defense)
         
-        @timeout(0.01)
-        def _arrange_with_timeout():
-            offense_cpy.arrange(defense_cpy)
-            
-        _arrange_with_timeout()
+        t_beg = time.perf_counter()
+        offense_cpy.arrange(defense_cpy)
+        t_end = time.perf_counter()
+        t_elapsed = t_end - t_beg
+        t_limit = self._get_time_limit()
+        if t_elapsed > t_limit:
+            err_msg = "[%s] The duration of arrangement " \
+                      "should be less than or " \
+                      "equal to %.4f, not %.4f!"% \
+                      (
+                          offense.name,
+                          t_limit,
+                          t_elapsed
+                      )
+            write_log(err_msg)
+            raise RuntimeError(err_msg)
         
         self._check_consistency(offense,
                                 offense_cpy,
