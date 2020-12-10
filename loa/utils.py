@@ -63,11 +63,5 @@ def attack(unit, target, wtype):
     
     target.hp = max(0, target.hp - max(1, unit.att - target.arm))
     unit.hp = max(0, unit.hp - max(1, 0.5*target.att - unit.arm))
+
     
-    
-def check_team_consistency(obj1, obj2, situation):
-    if len(obj1) != len(obj2):
-        err_msg = "Team size has been changed during %s!"%(situation)
-        write_log(err_msg)
-        raise RuntimeError(err_msg)
-        

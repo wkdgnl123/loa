@@ -45,17 +45,13 @@ class Simulator:
                                                               i+1,
                                                               t+1))
                 
-                self._examiner.check_play(offense, self._league_round)
-                self._examiner.check_play(defense, self._league_round)
-
-                offense_cpy = copy.deepcopy(offense)
-                defense_cpy = copy.deepcopy(defense)                
+                self._examiner.check_play(offense,
+                                          defense,
+                                          self._league_round)
                 
                 # Arrange
+                defense_cpy = copy.deepcopy(defense)
                 offense.arrange(defense_cpy)
-                utils.check_team_consistency(offense,
-                                             offense_cpy,
-                                             "arragement")
                 
                 # Attack
                 self._apply_attack(offense, defense)

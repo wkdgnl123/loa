@@ -50,6 +50,17 @@ class Team:
     def __setitem__(self, i, obj):
         self._units[i] = obj
         
+    def __eq__(self, other: Team):        
+        set_team1 = set(self.units)
+        set_team2 = set(self.units)
+        
+        return set_team1 == set_team2
+            
+
+    def __ne__(self, other: Team):        
+        return not self.__eq__(other)
+        
+        
     @property
     def name(self):
         return self._name
@@ -62,6 +73,10 @@ class Team:
     @property
     def units(self) -> List[Unit]:
         return self._units
+
+    @property
+    def num_positions(self):
+        return len(self._units)
 
     @property
     def num_units(self):
@@ -102,10 +117,15 @@ class TeamExaminer:
         self._check_types(team)
         self._check_positions(team)
         self._check_constraints(team, league_round)
-        self._check_arrange(team)
+        self._check_arrange(team, copy.deepcopy(team))
     
-    def check_play(self, team: Team, league_round: str = None):
-        self._check_positions(team)
+    def check_play(self,
+                   offense: Team,
+                   defense: Team,
+                   league_round: str = None):
+        self._check_positions(offense)        
+        self._check_positions(defense)
+        self._check_arrange(offense, defense)
         
     def _check_types(self, team: Team):
         utils.check_type("team", team, Team)        
@@ -207,10 +227,35 @@ class TeamExaminer:
             raise ValueError(err_msg)
                 
             
-    def _check_arrange(self, team: Team):            
-        team_cpy = copy.deepcopy(team)
-        team.arrange(team)
-        utils.check_team_consistency(team,
-                                     team_cpy,
-                                     "arrangement")
+    def _check_arrange(self,
+                       offense: Team,
+                       defense: Team):
         
+        offense_cpy = copy.deepcopy(offense)
+        defense_cpy = copy.deepcopy(defense)
+        offense_cpy.arrange(defense_cpy)
+        self._check_consistency(offense,
+                                offense_cpy,
+                                "arrangement")
+    
+    
+    def _check_consistency(self,
+                           obj1: Team,
+                           obj2: Team,
+                           situation: str):
+          
+        if len(obj1) != len(obj2):
+            err_msg = "The size of the team %s " \
+                      "has been changed in %s!"%(obj1.name, situation)
+            write_log(err_msg)
+            raise RuntimeError(err_msg)
+            
+    
+        if obj1 != obj2:
+            err_msg = "The units in the team %s " \
+                      "has been changed in %s!"%(obj1.name, situation)
+            write_log(err_msg)
+            raise RuntimeError(err_msg) 
+                
+        
+    

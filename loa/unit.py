@@ -24,7 +24,7 @@ class Unit:
         self.evs = evs    # Evasion (EVS)
         
     def __str__(self):
-        fstr = "%s(NAME:%s,POS:%.2f,HP:%.2f,ATT:%.2f,ARM:%.2f,EVS:%.2f)"
+        fstr = "%s(NAME:%s,POS:%d,HP:%.2f,ATT:%.2f,ARM:%.2f,EVS:%.2f)"
         return fstr%(self.__class__.__name__,
                      self.name,
                      self.pos,
@@ -37,14 +37,15 @@ class Unit:
         return str(self)
     
     def __eq__(self, other):
+        if not other:
+            return False
+            
         attr1 = (self.name,
-                 self.pos,
                  self.hp,
                  self.att,
                  self.arm,
                  self.evs)
         attr2 = (other.name,
-                 other.pos,
                  other.hp,
                  other.att,
                  other.arm,
@@ -52,21 +53,8 @@ class Unit:
         
         return attr1 == attr2
         
-    def __ne__(self, other):
-        attr1 = (self.name,
-                 self.pos,
-                 self.hp,
-                 self.att,
-                 self.arm,
-                 self.evs)
-        attr2 = (other.name,
-                 other.pos,
-                 other.hp,
-                 other.att,
-                 other.arm,
-                 other.evs)
-        
-        return attr1 != attr2
+    def __ne__(self, other):        
+        return not self.__eq__(other)
     
     def __hash__(self):
         return hash(str(self))
