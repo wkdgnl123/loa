@@ -71,11 +71,3 @@ def check_team_consistency(obj1, obj2, situation):
         write_log(err_msg)
         raise RuntimeError(err_msg)
         
-    set1_units = set([unit for unit in obj1])
-    set2_units = set([unit for unit in obj2])
-
-    if set1_units != set2_units:
-        err_msg = "The units in the team %s " \
-                  "has been changed during %s!"%(obj1.name, situation)
-        write_log(err_msg)
-        raise RuntimeError(err_msg)
