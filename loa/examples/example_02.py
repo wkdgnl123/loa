@@ -63,7 +63,7 @@ class MyTeam2(Team):
         # end of for
         self.units[-1] = first_unit
         if self.units[-1] != None:
-            self.units[-1].pos = 9
+            self.units[-1].pos = self.num_positions - 1
 
     
 if __name__ == "__main__":
