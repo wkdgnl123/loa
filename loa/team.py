@@ -118,6 +118,7 @@ class TeamExaminer:
     
     def check(self, team: Team, league_round: str = None):
         self._check_types(team)
+        self._check_attributes(team)
         self._check_positions(team)
         self._check_constraints(team, league_round)
         self._check_arrange(team, copy.deepcopy(team))
@@ -129,22 +130,70 @@ class TeamExaminer:
 
         self._check_types(offense)
         self._check_types(defense)
+        
+        self._check_attributes(offense)
+        self._check_attributes(defense)
 
         self._check_positions(offense)        
         self._check_positions(defense)
 
         self._check_arrange(offense, defense)
         
+    def _check_unit_type(self, unit: Unit):
+        if not isinstance(unit, Unit):
+            err_msg = "An element of Team should be Unit type, " \
+                      "not %s!"%(type(unit))
+            raise TypeError(err_msg)
+            
+    def _check_unit_attribute(self, unit: Unit, attr: str):        
+        if not hasattr(unit, attr):
+            err_msg = "[%s] Unit should have attribute: %s!" \
+                      %(type(unit), attr)
+            raise AttributeError(err_msg)
+            
+    def _check_team_attribute(self, team: Team, attr: str):        
+        if not hasattr(team, attr):
+            err_msg = "[%s] Unit should have attribute: %s!" \
+                      %(type(team), attr)
+            raise AttributeError(err_msg)
+            
     def _check_types(self, team: Team):
         utils.check_type("team", team, Team)        
         for unit in team:
             if unit is None:
                 continue
 
-            if not isinstance(unit, Unit):
-                err_msg = "An element of Team should be Unit type, "\
-                          "not %s"%(type(unit))
-                raise TypeError(err_msg)
+            self._check_unit_type(unit)
+        # end of for
+                
+                
+    def _check_attributes(self, team: Team):
+        utils.check_type("team", team, Team)
+        
+        self._check_team_attribute(team, "name")
+        self._check_team_attribute(team, "units")
+        self._check_team_attribute(team, "num_units")
+        self._check_team_attribute(team, "num_positions")
+        
+        
+        for unit in team:
+            if unit is None:
+                continue
+
+            self._check_unit_type(unit)            
+            self._check_unit_attribute(unit, "HP")
+            self._check_unit_attribute(unit, "ATT")
+            self._check_unit_attribute(unit, "ARM")
+            self._check_unit_attribute(unit, "EVS")
+            
+            self._check_unit_attribute(unit, "name")
+            self._check_unit_attribute(unit, "pos")
+            self._check_unit_attribute(unit, "hp")
+            self._check_unit_attribute(unit, "att")
+            self._check_unit_attribute(unit, "arm")
+            self._check_unit_attribute(unit, "evs")
+        # end of for
+        
                 
     def _check_positions(self, team: Team):
         for i, unit in enumerate(team):
@@ -152,13 +201,15 @@ class TeamExaminer:
                 err_msg = "[%s] The position of the unit " \
                           "is different from the real position %d, not %d."
                 raise ValueError(err_msg%(team.name, i, unit.pos))
+                
+                
         
     def _check_unit_uniqueness(self, team: Team):
                 
         set_ids = set([id(unit) for unit in team])
                 
         if len(set_ids) != len(team):
-            err_msg = "Each unit in the team %s should be unique! " \
+            err_msg = "[%s] Each unit should be unique! " \
                       "%s includes redundant unit instances."%(team.name,
                                                                team.name)
             write_log(err_msg)
@@ -284,15 +335,15 @@ class TeamExaminer:
                            situation: str):
           
         if len(origin) != len(copied):
-            err_msg = "The size of the team %s " \
+            err_msg = "[%s] The size of the team " \
                       "has been changed in %s!"%(origin.name, situation)
             write_log(err_msg)
             raise TeamConsistencyError(origin, err_msg)
             
     
         if origin != copied:
-            err_msg = "The units in the team %s " \
-                      "has been changed in %s!"%(origin.name, situation)
+            err_msg = "[%s] The units has been changed " \
+                      "during %s!"%(origin.name, situation)
             write_log(err_msg)
             raise TeamConsistencyError(origin, err_msg) 
                 
