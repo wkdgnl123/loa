@@ -118,6 +118,7 @@ class TeamExaminer:
     
     def check(self, team: Team, league_round: str = None):
         self._check_types(team)
+        self._check_name(team)
         self._check_attributes(team)
         self._check_positions(team)
         self._check_constraints(team, league_round)
@@ -130,6 +131,9 @@ class TeamExaminer:
 
         self._check_types(offense)
         self._check_types(defense)
+        
+        self._check_name(offense)
+        self._check_name(defense)
         
         self._check_attributes(offense)
         self._check_attributes(defense)
@@ -145,6 +149,7 @@ class TeamExaminer:
                       "not %s!"%(type(unit))
             raise TypeError(err_msg)
             
+                
     def _check_unit_attribute(self, unit: Unit, attr: str):        
         if not hasattr(unit, attr):
             err_msg = "[%s] Unit should have attribute: %s!" \
@@ -165,8 +170,13 @@ class TeamExaminer:
 
             self._check_unit_type(unit)
         # end of for
-                
-                
+    
+    def _check_name(self, team: Team):
+        if team.name.isspace() or len(team.name.split()) == 0:
+            err_msg = "Team name cannot be whitespace!"
+            write_log(err_msg)
+            raise ValueError(err_msg)
+    
     def _check_attributes(self, team: Team):
         utils.check_type("team", team, Team)
         
