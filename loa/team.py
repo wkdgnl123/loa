@@ -235,9 +235,9 @@ class TeamExaminer:
         if league_round == "ROUND-01":
             CONS_TEAM = constraints[league_round]['TEAM']
             CONS_NUM_UNITS = CONS_TEAM['NUM_UNITS']
-            CONS_MAX_EVS = CONS_TEAM['MAX_EVS']
+            CONS_UNIT_MAX_EVS = CONS_TEAM['UNIT_MAX_EVS']
             CONS_SUM_HP_ATT_ARM = CONS_TEAM['SUM_HP_ATT_ARM']
-            CONS_SUM_EVS_DIV_ARM = CONS_TEAM['SUM_EVS_DIV_ARM']
+            CONS_SUM_UNIT_EVS_DIV_ARM = CONS_TEAM['SUM_UNIT_EVS_DIV_ARM']
             
             
             if len(team) != CONS_NUM_UNITS:
@@ -249,14 +249,14 @@ class TeamExaminer:
             sum_hp = 0
             sum_att = 0
             sum_arm = 0
-            sum_evs_div_arm = 0
+            sum_unit_evs_div_arm = 0
             for unit in team:
-                if unit.evs > CONS_MAX_EVS:
+                if unit.evs > CONS_UNIT_MAX_EVS:
                     err_msg = "[%s] The evs of each unit should be " \
                               "less than or equal to %.2f, not %.2f!"% \
                               (
                                   unit.name,
-                                  CONS_MAX_EVS,
+                                  CONS_UNIT_MAX_EVS,
                                   unit.evs
                               )
                     write_log(err_msg)
@@ -265,7 +265,7 @@ class TeamExaminer:
                 sum_hp += unit.hp
                 sum_att += unit.att
                 sum_arm += unit.arm
-                sum_evs_div_arm += (float(unit.evs) / float(unit.arm))
+                sum_unit_evs_div_arm += (float(unit.evs) / float(unit.arm))
             # end of for
 
             sum_hp_att_arm = sum_hp + sum_att + sum_arm
@@ -281,17 +281,68 @@ class TeamExaminer:
                 write_log(err_msg)
                 raise ValueError(err_msg)
                 
-            if round(sum_evs_div_arm, 4)  > CONS_SUM_EVS_DIV_ARM:
+            if round(sum_unit_evs_div_arm, 4)  > CONS_SUM_UNIT_EVS_DIV_ARM:
                 err_msg = "[%s] The summation of EVS/ARM of all units " \
                           "in a team should be less than or " \
                           "equal to %.2f, not %.2f!"% \
                           (
                               team.name,
-                              CONS_SUM_EVS_DIV_ARM,
-                              sum_evs_div_arm
+                              CONS_SUM_UNIT_EVS_DIV_ARM,
+                              sum_unit_evs_div_arm
                           )
                 write_log(err_msg)
                 raise ValueError(err_msg)
+                
+        elif league_round == "ROUND-02":
+            CONS_TEAM = constraints[league_round]['TEAM']
+            CONS_NUM_UNITS = CONS_TEAM['NUM_UNITS']
+            CONS_UNIT_MIN_HP = CONS_TEAM['UNIT_MIN_HP']
+            CONS_UNIT_MAX_EVS = CONS_TEAM['UNIT_MAX_EVS']
+            CONS_UNIT_SUM_HP_ATT_1d5ARM = CONS_TEAM['UNIT_SUM_HP_ATT_1d5ARM']
+            
+            
+            if len(team) != CONS_NUM_UNITS:
+                err_msg = "[%s] The number of units should be" \
+                          " %d, not %d"%(team.name, CONS_NUM_UNITS, len(team))
+                write_log(err_msg)
+                raise ValueError(err_msg)
+            
+            
+            for unit in team:                
+                if unit.HP < CONS_UNIT_MIN_HP:
+                    err_msg = "[%s] The HP of each unit should be " \
+                              "greater than or equal to %.2f, not %.2f!"% \
+                              (
+                                  unit.name,
+                                  CONS_UNIT_MIN_HP,
+                                  unit.HP
+                              )
+                    write_log(err_msg)
+                    raise ValueError(err_msg)
+                # end of if
+                
+                
+                if unit.evs > 0:
+                    err_msg = "[%s] The evs of each unit should be zero, " \
+                              "not %.2f!"%(unit.name, unit.evs)
+                    write_log(err_msg)
+                    raise ValueError(err_msg)
+                # end of if
+                sum_unit_hp_att_1d5arm = (unit.HP + unit.ATT + 1.5*unit.ARM)
+                if sum_unit_hp_att_1d5arm > CONS_UNIT_SUM_HP_ATT_1d5ARM:
+                    err_msg = "[%s] The summation of HP, ATT, 1.5*ARM of " \
+                              "each unit should be less than or " \
+                              "equal to %.2f, not %.2f!"% \
+                              (
+                                  team.name,
+                                  CONS_UNIT_SUM_HP_ATT_1d5ARM,
+                                  sum_unit_hp_att_1d5arm
+                              )
+                    write_log(err_msg)
+                    raise ValueError(err_msg)
+                # end of if
+                
+            # end of for
             
         else:
             err_msg = "league_round=%s is not defined!"%(league_round)

@@ -30,7 +30,7 @@ def check_nonnegative_float(varname, val):
         write_log(err_msg)
         raise ValueError(err_msg)
 
-def check_type(varname, obj, wtype):
+def check_type(varname, obj, wtype, allow_none=False):
     """Check object for a wanted type.
 
     Parameters
@@ -51,6 +51,9 @@ def check_type(varname, obj, wtype):
     None.
 
     """
+    if allow_none and obj is None:
+        return
+    
     if not isinstance(obj, wtype):
         err_msg = "%s should be %s type, not %s"%(varname, wtype, type(obj))
         write_log(err_msg)
