@@ -330,7 +330,7 @@ class TeamExaminer:
                 # end of if
                 sum_unit_hp_att_1d5arm = (unit.HP + unit.ATT + 1.5*unit.ARM)
                 if sum_unit_hp_att_1d5arm > CONS_UNIT_SUM_HP_ATT_1d5ARM:
-                    err_msg = "[%s] The summation of HP, ATT, 1.5*ARM of " \
+                    err_msg = "[%s] The summation of HP, ATT and 1.5*ARM of " \
                               "each unit should be less than or " \
                               "equal to %.2f, not %.2f!"% \
                               (
