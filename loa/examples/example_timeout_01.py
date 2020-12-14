@@ -7,10 +7,10 @@ import time
 
 class MyUnit1(Unit):
     
-    HP = 9  # Hit Points (health points)    
+    HP = 10 # Hit Points (health points)    
     ATT = 6  # Attack
     ARM = 5  # Armor
-    EVS = 10 # Evasion
+    EVS = 0 # Evasion
         
     def __init__(self, team, name, pos):
         cls = __class__
@@ -24,10 +24,10 @@ class MyUnit1(Unit):
 
 class MyUnit2(Unit):
     
-    HP = 9  # Hit Points (health points)    
+    HP = 10  # Hit Points (health points)    
     ATT = 7  # Attack
     ARM = 4  # Armor
-    EVS = 8  # Evasion
+    EVS = 0  # Evasion
         
     def __init__(self, team, name, pos):
         cls = __class__
@@ -55,7 +55,7 @@ class MyTeam2(Team):
             self.units.append(unit)
             
     def arrange(self, enemy: Team):
-        time.sleep(0.015)
+        time.sleep(0.05)
 
     
 if __name__ == "__main__":
@@ -80,8 +80,8 @@ if __name__ == "__main__":
     
     
     examiner = TeamExaminer()
-    examiner.check(team1, "ROUND-01")
-    examiner.check(team2, "ROUND-01")    
+    examiner.check(team1, "ROUND-02")
+    examiner.check(team2, "ROUND-02")    
 
     n_team1, n_team2, n_draws = simulator.play(team1, team2, 20, 10)
     print("Number of Team1 wins:", n_team1)

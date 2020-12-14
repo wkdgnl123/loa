@@ -12,8 +12,12 @@ from loa.judge import Judge, MaxSurvivalJudge
 
 class Simulator:    
 
-    def __init__(self):
-        self._league_round = utils.get_current_round()
+    def __init__(self, league_round=None):
+        
+        if not league_round:
+            league_round = utils.get_current_round()
+        
+        self._league_round = league_round
         self._examiner = TeamExaminer()
              
     def play(self,

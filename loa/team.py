@@ -106,15 +106,9 @@ class TeamExaminer:
         if not fname_constraints:
             fname_constraints = "constraints.yml"
             
-        self._constraints = self._load_constraint(fname_constraints)
+        self._constraints = utils.load_constraint(fname_constraints)
         
-    def _load_constraint(self, fname: str):
-        dpath_constraint = pjoin(utils.get_package_path(), "constraints")
-        fpath_constraint = pjoin(dpath_constraint, fname)
-        
-                
-        with open(fpath_constraint, "rt") as fin:
-            return yaml.safe_load(fin.read())        
+
     
     def check(self, team: Team, league_round: str = None):
         self._check_types(team)
@@ -122,7 +116,7 @@ class TeamExaminer:
         self._check_attributes(team)
         self._check_positions(team)
         self._check_constraints(team, league_round)
-        self._check_arrange(team, copy.deepcopy(team))
+        self._check_arrange(team, copy.deepcopy(team), league_round)
     
     def check_play(self,
                    offense: Team,
@@ -141,7 +135,7 @@ class TeamExaminer:
         self._check_positions(offense)        
         self._check_positions(defense)
 
-        self._check_arrange(offense, defense)
+        self._check_arrange(offense, defense, league_round)
         
     def _check_unit_type(self, unit: Unit):
         if not isinstance(unit, Unit):
@@ -352,7 +346,7 @@ class TeamExaminer:
     def _get_time_limit(self, league_round=None):
         if not league_round:
             league_round = "ROUND-01"
-            
+                    
         league_round = league_round.upper()
         if league_round in ("ROUND-01", "ROUND-02"):
             CONS_TEAM = self._constraints[league_round]['TEAM']
@@ -363,7 +357,8 @@ class TeamExaminer:
             
     def _check_arrange(self,
                        offense: Team,
-                       defense: Team):
+                       defense: Team,
+                       league_round=None):
         
         offense_cpy = copy.deepcopy(offense)
         defense_cpy = copy.deepcopy(defense)
@@ -372,11 +367,11 @@ class TeamExaminer:
         offense_cpy.arrange(defense_cpy)
         t_end = time.perf_counter()
         t_elapsed = t_end - t_beg
-        t_limit = self._get_time_limit()
+        t_limit = self._get_time_limit(league_round)
         if t_elapsed > t_limit:
             err_msg = "[%s] The duration of arrangement " \
                       "should be less than or " \
-                      "equal to %.4f, not %.4f!"% \
+                      "equal to %f, not %f!"% \
                       (
                           offense.name,
                           t_limit,
