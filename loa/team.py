@@ -55,7 +55,7 @@ class Team:
         
     def __eq__(self, other: Team):        
         set_team1 = set(self.units)
-        set_team2 = set(self.units)
+        set_team2 = set(other.units)
         
         return set_team1 == set_team2
             

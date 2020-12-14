@@ -57,7 +57,13 @@ class Unit:
         return not self.__eq__(other)
     
     def __hash__(self):
-        return hash(str(self))
+        fstr = "%s(NAME:%s,HP:%.2f,ATT:%.2f,ARM:%.2f,EVS:%.2f)"
+        return hash(fstr%(self.__class__.__name__,
+                          self.name,
+                          self.hp,
+                          self.att,
+                          self.arm,
+                          self.evs))
     
     # Properties
     @property
