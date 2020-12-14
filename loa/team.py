@@ -290,6 +290,7 @@ class TeamExaminer:
         elif league_round == "ROUND-02":
             CONS_TEAM = constraints[league_round]['TEAM']
             CONS_NUM_UNITS = CONS_TEAM['NUM_UNITS']
+            CONS_UNIT_MAX_ATT = CONS_TEAM['UNIT_MAX_ATT']
             CONS_UNIT_MIN_HP = CONS_TEAM['UNIT_MIN_HP']
             CONS_UNIT_MAX_EVS = CONS_TEAM['UNIT_MAX_EVS']
             CONS_UNIT_SUM_HP_ATT_1d5ARM = CONS_TEAM['UNIT_SUM_HP_ATT_1d5ARM']
@@ -302,7 +303,19 @@ class TeamExaminer:
                 raise ValueError(err_msg)
             
             
-            for unit in team:                
+            for unit in team:
+                if unit.ATT > CONS_UNIT_MAX_ATT:
+                    err_msg = "[%s] The ATT of each unit should be " \
+                              "less than or equal to %.2f, not %f!"% \
+                              (
+                                  unit.name,
+                                  CONS_UNIT_MAX_ATT,
+                                  unit.ATT
+                              )
+                    write_log(err_msg)
+                    raise ValueError(err_msg)
+                # end of if
+                
                 if unit.HP < CONS_UNIT_MIN_HP:
                     err_msg = "[%s] The HP of each unit should be " \
                               "greater than or equal to %.2f, not %f!"% \

@@ -9,7 +9,7 @@ from loa.logging import use_logging, finish_logging
 class MyUnit1(Unit):
     
     HP = 20  # Hit Points (health points)    
-    ATT = 18 # Attack
+    ATT = 14 # Attack
     ARM = 8  # Armor
     EVS = 0  # Evasion
         
@@ -25,8 +25,8 @@ class MyUnit1(Unit):
 
 class MyUnit2(Unit):
     
-    HP = 15  # Hit Points (health points)    
-    ATT = 20  # Attack
+    HP = 21  # Hit Points (health points)    
+    ATT = 14  # Attack
     ARM = 10 # Armor
     EVS = 0  # Evasion
         
