@@ -311,7 +311,7 @@ class TeamExaminer:
             for unit in team:                
                 if unit.HP < CONS_UNIT_MIN_HP:
                     err_msg = "[%s] The HP of each unit should be " \
-                              "greater than or equal to %.2f, not %.2f!"% \
+                              "greater than or equal to %.2f, not %f!"% \
                               (
                                   unit.name,
                                   CONS_UNIT_MIN_HP,
@@ -332,7 +332,7 @@ class TeamExaminer:
                 if sum_unit_hp_att_1d5arm > CONS_UNIT_SUM_HP_ATT_1d5ARM:
                     err_msg = "[%s] The summation of HP, ATT and 1.5*ARM of " \
                               "each unit should be less than or " \
-                              "equal to %.2f, not %.2f!"% \
+                              "equal to %.2f, not %f!"% \
                               (
                                   team.name,
                                   CONS_UNIT_SUM_HP_ATT_1d5ARM,
