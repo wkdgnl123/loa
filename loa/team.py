@@ -354,7 +354,7 @@ class TeamExaminer:
             league_round = "ROUND-01"
             
         league_round = league_round.upper()
-        if league_round == "ROUND-01":
+        if league_round in ("ROUND-01", "ROUND-02"):
             CONS_TEAM = self._constraints[league_round]['TEAM']
             if 'ARRANGE_TIME_LIMIT' in CONS_TEAM:
                 return CONS_TEAM['ARRANGE_TIME_LIMIT']
